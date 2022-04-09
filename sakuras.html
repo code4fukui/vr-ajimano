@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head>
+<title>glb-viewer</title>
+<script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+<script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
+<script type="module" src="https://code4fukui.github.io/glb-viewer/mc-controls.js"></script>
+</head>
+<script type="module">
+onload = () => {
+  const putSnowman = (pos, th) => {
+    const obj = document.createElement("a-entity");
+    obj.setAttribute("gltf-model", "#sakura");
+    obj.setAttribute("scale", { x: 42.2, y: 42.2, z: 42.2 });
+    obj.setAttribute("position", pos);
+    obj.setAttribute("rotation", { x: 0, y: th, z: 0 });
+    scene.appendChild(obj);
+  };
+
+  const r = 20;
+  const n = 6;
+  for (let i = 0; i < n; i++) {
+    const th = Math.PI * 2 / n * i;
+    const x = Math.cos(th) * r;
+    const y = 0;
+    const z = Math.sin(th) * r;
+    putSnowman({ x, y, z }, -th / Math.PI * 180 + 90 );
+  }
+};
+</script>
+<body>
+<a-scene id="scene" background="color: #333" renderer="colorManagement: true">
+  <a-assets timeout="10000">
+    <a-asset-item id="sakura" src="./ajimano-sakura.glb"></a-asset-item>
+  </a-assets>
+  <a-entity light="type: ambient; color: #FFF"></a-entity>
+  <a-entity light="type: directional; color: #FFF; intensity: 1" position="-0 2 1"></a-entity>
+  <a-entity light="type: directional; color: #FFF; intensity: 1" position="-0 1 .5"></a-entity>
+  <a-plane color="#aaa" height="300" width="300" rotation="-90 0 0"></a-plane>
+  <a-entity id="cameraRig" position="0 1.7 0">
+    <a-entity id="head" camera position="0 0 0" mc-controls look-controls x-drone-controls-mode2></a-entity>
+    <a-entity oculus-touch-controls="hand:left" teleport-controls="button:trigger; collisionEntities:.collidable; cameraRig:#cameraRig; teleportOrigin:#head;"></a-entity>
+    <a-entity oculus-touch-controls="hand:right" teleport-controls="button:trigger; collisionEntities:.collidable; cameraRig:#cameraRig; teleportOrigin:#head;"></a-entity>
+  </a-entity>
+</a-scene>
+</body>
+</html>
